@@ -56,6 +56,8 @@ public class HelloController {
 	static class Hello {
 		private String name;
 		private int call;
+		private int call2;
+
 		public int getcall() { return call; }
 		public void setcall(int calls){ this.call=calls; }
 		public String getName() { return name; }
