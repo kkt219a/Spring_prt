@@ -6,11 +6,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+//controller 명시
 @Controller
 public class HelloController {
 
 	/**  TEST */
 	// http://localhost:8080/hello
+	// web application에서 '/hello'로 들어오면 이 method를 호출
 	@GetMapping("hello")
 	public String hello(Model model) {
 		model.addAttribute("data","hello!!");
@@ -19,16 +21,15 @@ public class HelloController {
 
 	/**  MVC와 템플릿 엔진 */
 	//http://localhost:8080/hello-mvc?name=spring
+	//RequestParam이 get으로 받아온 것을 쓰겠다는 것이다.
+	//@RequestParam("name")일 때, required의 default는 true다.
+	//필수로 넣지 않으면 오류가 발생하는 것이다. 그래서 아래 소스처럼
+	//required를 false를 주면 get의 값을 넣지 않아도 오류가 발생하지 않는다.
 	@GetMapping("hello-mvc")
-	// RequestParam이 곧 get이고 get으로 받아온 것을 쓰겠다.
-	// @RequestParam("name")이 기본인데 required는 기본이
-	// true이다 그래서 아래처럼 required를 false를 주면
-	// get의 값을 넣지 않아도 오류 발생 x
-	// 위의 기본상태에서 쓰면 name value 안주면 오류
 	public String helloMvc(@RequestParam(value = "name", required = false) String name, Model model){
-		//view에서 랜더링할때 쓰기위해 model에 attr 추가
+		//view에서 rendering할때 쓰기위해 model에 attr 추가
 		model.addAttribute("name",name);
-		//이 html로 고고! template의!
+		//html 이동
 		return "hello-template";
 	}
 
