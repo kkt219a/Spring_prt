@@ -46,6 +46,7 @@ public class HelloController {
 	@GetMapping("hello-api")
 	@ResponseBody
 	public Hello helloApi(@RequestParam("name") String name) {
+		//참고: Intellij에서 ctrl+shift+enter 하면 자동완성 된다.
 		Hello hello = new Hello();
 		hello.setName(name);
 		hello.setcall(13);
@@ -54,11 +55,15 @@ public class HelloController {
 
 
 	}
+	//static 선언시 클래스 내부에서도 사용 가능
 	static class Hello {
 		private String name;
 		private int call;
 		private int call2;
 
+		//참고: alt+insert 하면 get set이 자동으로 나온다
+		// java bean 표준 방식이라고 하고 property 접근 방식,
+		// getter, setter 라고도 한다. 
 		public int getcall() { return call; }
 		public void setcall(int calls){ this.call=calls; }
 		public String getName() { return name; }
