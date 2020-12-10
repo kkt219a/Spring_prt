@@ -3,46 +3,53 @@ package springt.repository;
 import springt.domain.Member;
 import java.util.*;
 /**
- * 동시성 문제가 고려되어 있지 않음, 실무에서는 ConcurrentHashMap, AtomicLong 사용 고려
+ * 실무에서는 동시성 문제가 있을 수 있어서
+ * private static store처럼 공유되는
+ * 변수일 때는 ConcurrentHashMap을 써야한다.
+ * public static long도 동시성 문제를 고려해서
+ * AtomicLong 사용도 고려해야 한다.
  */
 public class MemoryMemberRepository implements MemberRepository {
 
-    // save할 공간을 MAP으로 키는 회원 아이디니까 LONG? 값은 멤버?
-    // 컨트롤 스페이스 하고 import해주면 됨
-    // 아이디는 여기서 세팅을 해주는거지
+    // save할 공간을 MAP으로 key(Long): id, Value(Member): 회원
+    // ctrl+space =  import 활용
     private static Map<Long, Member> store = new HashMap<>();
 
-    //0,1,2 키값을 만들어주는 애라고 보면 됨
+    //0,1,2 키값을 생성해주는 변수
     private static long sequence = 0L;
 
+    //저장 시 sequence plus, and put
     @Override
     public Member save(Member member) {
-        member.setId(++sequence); // 시퀀스 값을 하나 올려주고
-        store.put(member.getId(), member); // 이제 저장
+        member.setId(++sequence);
+        store.put(member.getId(), member);
         return member;
     }
 
-    //결과가 없으면 null 일수 있으니 optional로 감싸는거!
+    //store에서 꺼내나, null을 예상해서 optional로 감싸기
     @Override
     public Optional<Member> findById(Long id) {
         return Optional.ofNullable(store.get(id));
     }
 
-    // 끝까지 없으면 null로 감싸서 올거
+    // 못찾으면 null을 예상해서 optional로 감싸기
     @Override
     public Optional<Member> findByName(String name) {
-        //루프를 돌린다..? 람다...? 파라미터로 넘어온 name이랑 같은지
+        // 요소를 특정 기준으로 걸러내기, 들어온 이름이
+        // member의 이름과 같은게 있는지의 여부
+        // findAny() : 하나라도 찾는 것, 이 결과가 optional로 반환됨
         return store.values().stream()
                 .filter(member -> member.getName().equals(name))
                 .findAny();
     }
 
-    // 이제 전부 가져오는 거지
+    // 전체 반환
     @Override
     public List<Member> findAll() {
         return new ArrayList<>(store.values());
     }
 
+    // 비우기
     public void clearStore() {
         store.clear();
     }
