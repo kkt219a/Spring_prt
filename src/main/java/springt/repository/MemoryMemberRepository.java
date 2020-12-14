@@ -1,5 +1,6 @@
 package springt.repository;
 
+import org.springframework.stereotype.Repository;
 import springt.domain.Member;
 import java.util.*;
 /**
@@ -9,6 +10,7 @@ import java.util.*;
  * public static long도 동시성 문제를 고려해서
  * AtomicLong 사용도 고려해야 한다.
  */
+//@Repository
 public class MemoryMemberRepository implements MemberRepository {
 
     // save할 공간을 MAP으로 key(Long): id, Value(Member): 회원
